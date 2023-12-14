@@ -11,8 +11,6 @@ export default class Server {
       res.status(200).send({ message: "Success" });
     });
 
-    console.log(NODE_ENV);
-
     if (NODE_ENV === "development") {
       this.app.listen(port, () => {
         console.log(`[server]: Server is running at http://localhost:${port}`);
