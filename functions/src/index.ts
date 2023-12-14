@@ -1,19 +1,6 @@
-import express, { Express, Request, Response } from "express";
 import * as functions from "firebase-functions";
+import Server from "./app";
 
-const app: Express = express();
-// const port = process.env.PORT || 3000;
-
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).send({ message: "Success" });
-});
-
-if (process.env.NODE_ENV === "development") {
-  app.listen(3000, () => {
-    console.log(`[server]: Server is running at http://localhost:${3000}`);
-  });
-}
-
-export const generatePosts = functions.https.onRequest(app);
+export const generatePosts = functions.https.onRequest(Server.instance);
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
