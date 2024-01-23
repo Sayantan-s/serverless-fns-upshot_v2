@@ -1,7 +1,7 @@
-import express, { Express, Request, Response } from "express";
-import { NODE_ENV, PORT} from "../config";
-import {OpenApi} from "../config/openai";
 import bodyParser from "body-parser";
+import express, { Express, Request, Response } from "express";
+import { NODE_ENV, PORT } from "../config";
+import { OpenApi } from "../config/openai";
 
 export default class Server {
   private static getInstance: Express;
@@ -12,35 +12,38 @@ export default class Server {
     const port = PORT || 3000;
 
     this.app.post("/health", async (req: Request, res: Response) => {
-      const {productName, productMoto}=req.body;
+      const { productName, productMoto } = req.body;
       const description = await OpenApi.client.chat.completions.create({
-        messages: [{
-          role: "system",
-          content: `Generate a 50 words product description 
+        messages: [
+          {
+            role: "system",
+            content: `Generate a 50 words product description 
           according to the below inputs:
         productName: ${productName}
-        productMoto: ${productMoto}`}],
+        productMoto: ${productMoto}`,
+          },
+        ],
         model: "gpt-3.5-turbo",
         stream: false,
         temperature: 0.2,
         max_tokens: 300,
       });
       console.log(description.choices[0].message.content);
-      res
-        .status(200)
-        .send(description.choices[0].message.content);
+      res.status(200).send(description.choices[0].message.content);
     });
 
     this.app.post("/genpost", async (req: Request, res: Response) => {
-      const {productName, productMoto}=req.body;
+      const { productName, productMoto } = req.body;
       const description = await OpenApi.client.chat.completions.create({
-        messages: [{
-          role: "system",
-          content: `
+        messages: [
+          {
+            role: "system",
+            content: `
           Write 5 social media posts about the product "${productName}" 
           with product motto "${productMoto}" 
           for Build in Public purpose.(Include emojis and Post Title)`,
-        }],
+          },
+        ],
         model: "gpt-3.5-turbo",
         stream: false,
         temperature: 0.1,
