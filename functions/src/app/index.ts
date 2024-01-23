@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import express, { Express, Request, Response } from "express";
-import { NODE_ENV, PORT } from "../config";
+import { NODE_ENV, SERVERLESS_PORT } from "../config";
 import { OpenApi } from "../config/openai";
 
 export default class Server {
@@ -9,7 +9,7 @@ export default class Server {
   constructor() {
     this.app = express();
     this.app.use(bodyParser.json());
-    const port = PORT || 3000;
+    const port = SERVERLESS_PORT || 3000;
 
     this.app.post("/health", async (req: Request, res: Response) => {
       const { productName, productMoto } = req.body;
