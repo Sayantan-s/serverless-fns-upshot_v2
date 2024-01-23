@@ -3,6 +3,11 @@ import express, { Express, Request, Response } from "express";
 import { NODE_ENV, SERVERLESS_PORT } from "../config";
 import { OpenApi } from "../config/openai";
 
+interface FivePosts {
+  title?: string;
+  content?: string;
+}
+
 export default class Server {
   private static getInstance: Express;
   private app: Express;
@@ -41,7 +46,8 @@ export default class Server {
             content: `
           Write 5 social media posts about the product "${productName}" 
           with product motto "${productMoto}" 
-          for Build in Public purpose.(Include emojis and Post Title)`,
+          for Build in Public purpose.
+          (Include emojis and appropriate Post title)`,
           },
         ],
         model: "gpt-3.5-turbo",
@@ -50,9 +56,21 @@ export default class Server {
         max_tokens: 500,
       });
       console.log(description.choices[0].message.content);
-      res
-        .status(200)
-        .send(JSON.stringify(description.choices[0].message.content));
+      const lines = description.choices[0].message.content
+        ?.split("\n")
+        .filter((line) => line.trim() !== "");
+      const fivePosts: FivePosts[] = [];
+      lines?.forEach((val, index) => {
+        const temp: FivePosts = {};
+        if (index % 2 === 0) {
+          temp["title"] = val;
+        }
+        if (index % 2 !== 0) {
+          temp["content"] = val;
+        }
+        fivePosts.push(temp);
+      });
+      res.status(200).send(fivePosts);
     });
     if (NODE_ENV === "development") {
       this.app.listen(port, () => {
