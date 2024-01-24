@@ -2,8 +2,10 @@ import bodyParser from "body-parser";
 import express, { Express, Request, Response } from "express";
 import { NODE_ENV, SERVERLESS_PORT } from "../config";
 import { OpenApi } from "../config/openai";
+import {v4 as uuid} from "uuid";
 
 interface FivePosts {
+  id?:string;
   title?: string;
   content?: string;
 }
@@ -56,20 +58,16 @@ export default class Server {
         max_tokens: 500,
       });
       console.log(description.choices[0].message.content);
-      const lines = description.choices[0].message.content
-        ?.split("\n")
-        .filter((line) => line.trim() !== "");
+      const lines= description.choices[0].message.content?.split("\n")
+        .filter((line) => line?.trim() !== "");
       const fivePosts: FivePosts[] = [];
-      lines?.forEach((val, index) => {
+      for (let i=0; i<=8; i=i+2) {
         const temp: FivePosts = {};
-        if (index % 2 === 0) {
-          temp["title"] = val;
-        }
-        if (index % 2 !== 0) {
-          temp["content"] = val;
-        }
+        temp["id"]=uuid();
+        temp["title"]=lines?lines[i] :undefined;
+        temp["content"]=lines?lines[i+1]:undefined;
         fivePosts.push(temp);
-      });
+      }
       res.status(200).send(fivePosts);
     });
     if (NODE_ENV === "development") {
