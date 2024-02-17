@@ -13,28 +13,19 @@ export class Posts {
           role: "system",
           content: `
           Write 5 social media posts about the product "${productName}" 
-          and its product moto is "${productMoto}" 
-          for Build in Public purpose for twitter.
-          
-          Your response schema should be similar to this::
-          
-          Title: Build, deploy, and scale your databases 
-                 effortlessly with Render! 💻 #BuildInPublic
-
-          Conent: Render makes database deployment a breeze! 
-                Whether you're a solo developer or part of a team, 
-                Render's platform simplifies the process so 
-                you can focus on what matters most - building great products! 
-                #Render #DatabasePlatform       
-                    
+          and its product motto is "${productMoto}" 
+          for Build in Public purpose for Twitter/X. 
+          Note: Include very intuitive Post Titles , Nice Post Descriptions 
+          & emojis .
           `,
         },
       ],
       model: "gpt-3.5-turbo",
       stream: false,
-      temperature: 0.1,
+      temperature: 0.4,
       max_tokens: 500,
     });
+    // console.log(description.choices[0].message.content);
 
     const lines = description.choices[0].message.content
       ?.split("\n")
@@ -45,11 +36,11 @@ export class Posts {
     for (let i = 0; i <= 8; i = i + 2) {
       const temp: FivePosts = {};
       temp.id = uuid();
-      temp.title = lines?.[i].replace(" Post Title: ", "");
-      temp.content = lines?.[i + 1].replace("   Post Content: ", "");
+      temp.title = lines?.[i].substring(1).replace(". Post Title: ", "");
+      temp.content = lines?.[i + 1].trimStart().replace("Description: ", "");
       fivePosts.push(temp);
     }
-
+    console.log(fivePosts);
     res.status(200).send(fivePosts);
   };
 }
