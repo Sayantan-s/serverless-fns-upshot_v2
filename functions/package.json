@@ -11,9 +11,6 @@
     "logs": "firebase functions:log",
     "dev": "NODE_ENV=development && nodemon src/index.ts"
   },
-  "engines": {
-    "node": "18"
-  },
   "main": "lib/index.js",
   "dependencies": {
     "@types/uuid": "^9.0.7",
