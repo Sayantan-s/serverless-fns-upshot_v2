@@ -5,6 +5,18 @@ dotenv.config({
   path: path.join(__dirname, "../../.env"),
 });
 
-const { SERVERLESS_PORT, NODE_ENV, OPENAI_API_KEY } = process.env;
+const {
+  SERVERLESS_PORT,
+  NODE_ENV,
+  OPENAI_API_KEY,
+  GEN_POSTS_TEST_KEY,
+  API_KEY,
+} = process.env;
 
-export { NODE_ENV, OPENAI_API_KEY, SERVERLESS_PORT };
+export {
+  API_KEY,
+  GEN_POSTS_TEST_KEY,
+  NODE_ENV,
+  OPENAI_API_KEY,
+  SERVERLESS_PORT,
+};
